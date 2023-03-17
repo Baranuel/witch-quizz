@@ -3,7 +3,7 @@ import clientPromise from "../lib/mongodb";
 import { InferGetServerSidePropsType } from "next";
 import Button from "../components/Button";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: any) {
   try {
     const data = await fetch("http://localhost:3000/api/questions");
     const res = await data.json();
