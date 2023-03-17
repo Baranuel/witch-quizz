@@ -1,8 +1,7 @@
-import Head from "next/head";
-import clientPromise from "../lib/mongodb";
+import { useState } from "react";
 import { InferGetServerSidePropsType } from "next";
-import Button from "../components/Button";
 import { getQuestions } from "../fetch-data";
+import EntryScreen from "../components/EntryScreen";
 
 export async function getServerSideProps(context: any) {
   try {
@@ -23,11 +22,11 @@ export default function Home({
   isConnected,
   questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(questions);
+  const [entered, setEntered] = useState(false);
 
   return (
-    <div className="bg-bg-primary h-screen">
-      <Button text="Enter" onClick={() => {}} />
+    <div className="h-screen w-screen bg-bg-primary">
+      <EntryScreen entered={entered} setEntered={setEntered} />
     </div>
   );
 }
