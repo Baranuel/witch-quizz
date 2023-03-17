@@ -5,7 +5,7 @@ import Button from "../components/Button";
 
 export async function getServerSideProps(context: any) {
   try {
-    const data = await fetch("http://localhost:3000/api/questions");
+    const data = await fetch("https://localhost:3000/api/questions");
     const res = await data.json();
     return {
       props: { isConnected: true, questions: res },
