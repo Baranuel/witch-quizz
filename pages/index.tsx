@@ -2,13 +2,14 @@ import Head from "next/head";
 import clientPromise from "../lib/mongodb";
 import { InferGetServerSidePropsType } from "next";
 import Button from "../components/Button";
+import { getQuestions } from "../fetch-data";
 
 export async function getServerSideProps(context: any) {
   try {
-    const data = await fetch("api/questions");
-    const res = await data.json();
+    const questions = await getQuestions();
+
     return {
-      props: { isConnected: true, questions: res },
+      props: { isConnected: true, questions: questions },
     };
   } catch (e) {
     console.error(e);
