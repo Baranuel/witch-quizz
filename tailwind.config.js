@@ -13,6 +13,7 @@ module.exports = {
       "color-heading": "#D4CCB8",
       "color-text": "#D9D9D9",
       "custom-black": "#1A1A1A",
+      "custom-white": "#FFFFFF",
     },
     fontFamily: {
       k2d: ["K2D", "sans-serif"],

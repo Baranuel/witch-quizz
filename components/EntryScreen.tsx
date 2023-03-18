@@ -3,6 +3,7 @@ import React from "react";
 import Text from "./Text";
 import Button from "./Button";
 import Link from "next/link";
+import LinkComponent from "./LinkComponent";
 
 interface Props {
   entered: boolean;
@@ -25,13 +26,13 @@ function EntryScreen({ entered, setEntered }: Props) {
         vengeful witch, who is deeply resentful due to being trapped by a spell.
         It is advised that you proceed with caution.
       </Text>
-      <Button
+      <LinkComponent
+        href="questions"
         text="Enter"
         onClick={() => {
           setEntered(true);
         }}
       />
-      <Link href="/questions">test</Link>
     </motion.div>
   );
 }

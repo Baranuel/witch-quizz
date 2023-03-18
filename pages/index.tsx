@@ -2,6 +2,7 @@ import { useState } from "react";
 import { InferGetServerSidePropsType } from "next";
 import { getQuestions } from "../fetch-data";
 import EntryScreen from "../components/EntryScreen";
+import { AnimatePresence, motion } from "framer-motion";
 
 export async function getServerSideProps(context: any) {
   try {
@@ -19,9 +20,10 @@ export async function getServerSideProps(context: any) {
 }
 
 export default function Home({
-  isConnected,
   questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const _questions = [...questions];
+  const [data, setData] = useState(_questions);
   const [entered, setEntered] = useState(false);
 
   return (
