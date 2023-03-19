@@ -18,10 +18,11 @@ function TextBubble({ children, variants, showNextQuestion, question }: Props) {
 
   return (
     <motion.div
+      layout
       variants={variants}
       className="flex text-color-text bg-custom-black/20 rounded-xl py-6 px-4 mb-4 gap-2 font-k2d justify-between min-w-full"
     >
-      <h3 className="self-start text-md text-color-heading min-w-[75px]">
+      <h3 className="self-start text-sm text-color-heading min-w-[75px]">
         - Nimue
       </h3>
       <TypeAnimation
@@ -31,7 +32,7 @@ function TextBubble({ children, variants, showNextQuestion, question }: Props) {
             handleNextQuestion(question.id, TIME_TO_WAIT_BEFORE_NEXT_QUESTION);
           },
         ]}
-        className=" text-left w-4/5 "
+        className=" text-left w-4/5 text-sm "
         speed={75}
         cursor={false}
       />

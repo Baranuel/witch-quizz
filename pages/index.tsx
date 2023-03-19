@@ -23,8 +23,6 @@ export async function getServerSideProps(context: any) {
 export default function Home({
   questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const _questions = [...questions];
-  const [data, setData] = useState(_questions);
   const [entered, setEntered] = useState(false);
 
   return (

@@ -1,15 +1,22 @@
 import { motion } from "framer-motion";
+import { InferGetServerSidePropsType } from "next";
 import React from "react";
 
 import TextBubble from "../components/TextBubble";
 import TextGroup from "../components/TextGroup";
+import { getQuestions } from "../fetch-data";
+import { Question } from "../types/questionDto";
 
-function test() {
+function Questions({
+  _questions,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  console.log(_questions);
+
   const questions = [
     {
       id: 0,
       question:
-        "Greetings sorceress, My name is Nimue. I am a blood sorceress trapped in this device and you’ve entered my domain.",
+        "Greetings sorceress, My name is Nimue. I am a crimson witch trapped in this device and you’ve entered my domain.",
     },
     {
       id: 1,
@@ -19,7 +26,7 @@ function test() {
   ];
 
   return (
-    <div className="bg-bg-primary h-screen w-screen flex flex-col px-4  items-start justify-center">
+    <div className="bg-bg-primary min-h-screen w-screen flex flex-col px-4  items-start justify-center">
       <motion.h1
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -33,4 +40,19 @@ function test() {
   );
 }
 
-export default test;
+export default Questions;
+
+export async function getServerSideProps(context: any) {
+  try {
+    const questions = await getQuestions();
+
+    return {
+      props: { isConnected: true, _questions: questions },
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      props: { isConnected: false },
+    };
+  }
+}

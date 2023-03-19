@@ -10,7 +10,7 @@ interface Props {
 function TextGroup({ questions }: Props) {
   const lastQuestionId = questions[questions.length - 1].id;
   const NEXT_QUESTION_ID_INCREMENT = 1;
-
+  console.log;
   const [questionsToShow, setQuestionsToShow] = useState([questions[0]]);
 
   const showNextQuestion = (id: number) => {
