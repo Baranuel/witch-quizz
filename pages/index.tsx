@@ -3,6 +3,7 @@ import { InferGetServerSidePropsType } from "next";
 import { getQuestions } from "../fetch-data";
 import EntryScreen from "../components/EntryScreen";
 import { AnimatePresence, motion } from "framer-motion";
+import Item from "../components/Item";
 
 export async function getServerSideProps(context: any) {
   try {
@@ -29,6 +30,7 @@ export default function Home({
   return (
     <div className="h-screen w-screen bg-bg-primary">
       <EntryScreen entered={entered} setEntered={setEntered} />
+      <Item />
     </div>
   );
 }

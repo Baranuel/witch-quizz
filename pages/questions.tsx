@@ -1,19 +1,22 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import React from "react";
-import { AnimatedHeader } from "../components/AnimatedHeader";
+
 import TextBubble from "../components/TextBubble";
+import TextGroup from "../components/TextGroup";
 
 function test() {
-  const variants = {
-    hidden: { opacity: 0, scale: 0.5 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        staggerChildren: 1.5,
-      },
+  const questions = [
+    {
+      id: 0,
+      question:
+        "Greetings sorceress, My name is Nimue. I am a blood sorceress trapped in this device and you’ve entered my domain.",
     },
-  };
+    {
+      id: 1,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
+  ];
 
   return (
     <div className="bg-bg-primary h-screen w-screen flex flex-col px-4  items-start justify-center">
@@ -25,12 +28,7 @@ function test() {
       >
         Encounter
       </motion.h1>
-      <motion.div variants={variants} animate={"visible"}>
-        <TextBubble>
-          Greetings sorceress, My name is Nimue. I am a blood sorceress trapped
-          in this device and you’ve entered my domain.
-        </TextBubble>
-      </motion.div>
+      <TextGroup questions={questions} />
     </div>
   );
 }
