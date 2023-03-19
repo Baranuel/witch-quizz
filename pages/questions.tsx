@@ -1,16 +1,18 @@
-import { motion } from "framer-motion";
+import { motion, LayoutGroup } from "framer-motion";
 import { InferGetServerSidePropsType } from "next";
-import React from "react";
-
-import TextBubble from "../components/TextBubble";
+import React, { useEffect, useRef } from "react";
 import TextGroup from "../components/TextGroup";
 import { getQuestions } from "../fetch-data";
-import { Question } from "../types/questionDto";
 
 function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(_questions);
+  const ref = useRef<HTMLDivElement>(null!);
+
+  useEffect(() => {
+    if (ref.current === null) return;
+    setInterval(() => (ref.current.scrollTop = ref.current.scrollHeight), 100);
+  }, [ref]);
 
   const questions = [
     {
@@ -23,20 +25,56 @@ function Questions({
       question:
         "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
     },
+    {
+      id: 2,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
+    {
+      id: 3,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
+    {
+      id: 4,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
+    {
+      id: 5,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
+    {
+      id: 6,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
+    {
+      id: 7,
+      question:
+        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+    },
   ];
 
   return (
-    <div className="bg-bg-primary min-h-screen w-screen flex flex-col px-4  items-start justify-center">
-      <motion.h1
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.25 }}
-        className="text-[calc(100vw/10)] mb-4 font-k2d text-color-heading "
-      >
-        Encounter
-      </motion.h1>
-      <TextGroup questions={questions} />
-    </div>
+    <LayoutGroup>
+      <motion.div className="bg-bg-primary min-h-screen w-screen flex flex-col   items-start justify-center">
+        <motion.h1
+          layout
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.25 }}
+          className="text-[calc(100vw/10)] mb-4 px-4 font-k2d text-color-heading "
+        >
+          Encounter
+        </motion.h1>
+
+        <TextGroup questions={questions} />
+
+        <div>answers</div>
+      </motion.div>
+    </LayoutGroup>
   );
 }
 
