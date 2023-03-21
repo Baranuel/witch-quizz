@@ -1,18 +1,13 @@
 import { motion, LayoutGroup } from "framer-motion";
 import { InferGetServerSidePropsType } from "next";
-import React, { useEffect, useRef } from "react";
-import TextGroup from "../components/TextGroup";
+import React, { useRef, useState } from "react";
+import DialogueBox from "../components/DialogueBox";
 import { getQuestions } from "../fetch-data";
 
 function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const ref = useRef<HTMLDivElement>(null!);
-
-  useEffect(() => {
-    if (ref.current === null) return;
-    setInterval(() => (ref.current.scrollTop = ref.current.scrollHeight), 100);
-  }, [ref]);
 
   const questions = [
     {
@@ -57,6 +52,14 @@ function Questions({
     },
   ];
 
+  const [dialogueBox, setDialogueBox] = useState([
+    {
+      type: "question",
+      src: "Nimue",
+      text: "Pray",
+    },
+  ]);
+
   return (
     <LayoutGroup>
       <motion.div className="bg-bg-primary min-h-screen w-screen flex flex-col   items-start justify-center">
@@ -69,10 +72,24 @@ function Questions({
         >
           Encounter
         </motion.h1>
+        <DialogueBox dialogue={dialogueBox} />
 
-        <TextGroup questions={questions} />
-
-        <div>answers</div>
+        <div
+          onClick={() =>
+            setDialogueBox((prev) => {
+              return [
+                ...prev,
+                {
+                  type: "answer",
+                  src: "Me",
+                  text: "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
+                },
+              ];
+            })
+          }
+        >
+          answers
+        </div>
       </motion.div>
     </LayoutGroup>
   );
