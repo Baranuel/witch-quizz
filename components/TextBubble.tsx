@@ -28,7 +28,7 @@ function TextBubble({ children, variants, type, nextSentence }: Props) {
       <TypeAnimation
         sequence={[
           () => {
-            return new Promise((resolve) => setTimeout(resolve, 500));
+            return new Promise((resolve) => setTimeout(resolve, 250));
           },
           children as string,
           () => {

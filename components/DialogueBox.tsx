@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { variants } from "../globals/animations";
-import MultipleSentences from "./MultipleSentences";
 import TextBubble from "./TextBubble";
 
 interface Props {
@@ -9,53 +8,48 @@ interface Props {
 }
 
 function DialogueBox({ dialogue }: Props) {
-  const arr = [
-    {
-      type: "question",
-      src: "Nimue",
-      text: "Pray tell, young sourceress, how many musical spells were crafted under the shroud of darkness in the album bearing the name Midnights, which was created by the songstress known to some as the queen of heartbreak and the ruler of the snakes?",
-    },
-    {
-      type: "question",
-      src: "Nimue",
-      text: "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      type: "question",
-      src: "Nimue",
-      text: "Pray tell, young sourceress, how many musical spells were crafted under the shroud of darkness in the album bearing the name Midnights, which was created by the songstress known to some as the queen of heartbreak and the ruler of the snakes?",
-    },
-    {
-      type: "question",
-      src: "Nimue",
-      text: "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      type: "question",
-      src: "Nimue",
-      text: "Pray tell, young sourceress, how many musical spells were crafted under the shroud of darkness in the album bearing the name Midnights, which was created by the songstress known to some as the queen of heartbreak and the ruler of the snakes?",
-    },
-    {
-      type: "question",
-      src: "Nimue",
-      text: "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-  ];
+  const [firstRender, setFirstRender] = useState(true);
+  const [sentences, setSentences] = useState([dialogue[0]]);
+  const lastAddedItem = dialogue[dialogue.length - 1];
 
-  console.log(dialogue);
+  useEffect(() => {
+    //ugly hack to prevent the first sentence from being added twice
+    if (!firstRender) {
+      setTimeout(
+        () => {
+          setSentences((prev) => [...prev, lastAddedItem]);
+        },
+        lastAddedItem.src === "Nimue" ? 750 : 0
+      );
+    } else {
+      setFirstRender(false);
+    }
+  }, [dialogue]);
+
+  const nextSentence = (index: number) => {
+    if (index >= dialogue.length - 1) return;
+    setTimeout(() => {
+      setSentences((prev) => [...prev, dialogue[index + 1]]);
+    }, 750);
+  };
+
   return (
     <motion.div
       variants={variants}
       animate="show"
       initial="hidden"
       layout
-      className="flex flex-col justify-center items-center w-full px-4 h-full"
+      className="flex flex-col  items-center w-full px-4 h-full"
     >
-      <MultipleSentences sentencesArray={arr} />
-      {dialogue.map((bubble, index) => {
+      {sentences.map((bubble, index) => {
         const { text } = bubble;
         return (
-          <TextBubble type={bubble.type} variants={variants} key={index}>
+          <TextBubble
+            nextSentence={() => nextSentence(index)}
+            type={bubble.type}
+            variants={variants}
+            key={index}
+          >
             {text}
           </TextBubble>
         );

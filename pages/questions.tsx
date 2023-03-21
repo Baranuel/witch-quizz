@@ -1,68 +1,66 @@
 import { motion, LayoutGroup } from "framer-motion";
 import { InferGetServerSidePropsType } from "next";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Button from "../components/Button";
 import DialogueBox from "../components/DialogueBox";
+import MultipleSentences from "../components/MultipleSentences";
 import { getQuestions } from "../fetch-data";
+import { introduction } from "../globals/introduction";
 
 function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const ref = useRef<HTMLDivElement>(null!);
+  const divRef = useRef<HTMLDivElement>(null!);
+  const [tryGuessing, setTryGuessing] = useState(true);
+  const [currentQuestion, setCurrentQuestion] = useState(_questions[0]);
+  const [dialogueBox, setDialogueBox] = useState(introduction);
+  const [myAnswer, setMyAnswer] = useState("");
 
-  const questions = [
-    {
-      id: 0,
-      question:
-        "Greetings sorceress, My name is Nimue. I am a crimson witch trapped in this device and you’ve entered my domain.",
-    },
-    {
-      id: 1,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      id: 2,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      id: 3,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      id: 4,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      id: 5,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      id: 6,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-    {
-      id: 7,
-      question:
-        "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-    },
-  ];
+  useEffect(() => {
+    if (!divRef.current) return;
+    divRef.current.scrollTop = divRef.current.scrollHeight;
+  }, [dialogueBox]);
 
-  const [dialogueBox, setDialogueBox] = useState([
-    {
-      type: "question",
-      src: "Nimue",
-      text: "Pray",
-    },
-  ]);
+  const updateCurrentQuestion = () => {
+    setCurrentQuestion(
+      _questions.find((q: any) => q.question_number === q.question_number + 1)
+    );
+  };
+
+  const updateDialogueBoxWithAnswer = (answer: string) => {
+    setDialogueBox((prev) => [
+      ...prev,
+      { type: "answer", src: "Me", text: answer },
+    ]);
+  };
+
+  const determineCorrectAnswer = (answer: string) => {
+    if (answer === currentQuestion.correct_answer) {
+      setTryGuessing(false);
+      updateCurrentQuestion();
+    } else {
+      setDialogueBox((prev) => [
+        ...prev,
+        { type: "question", src: "Me", text: "I don't know" },
+      ]);
+    }
+  };
+
+  const handleAnswer = async (answer: string) => {
+    return new Promise((resolve) => {
+      setMyAnswer(answer);
+      updateDialogueBoxWithAnswer(answer);
+      resolve(true);
+    }).then(() => {
+      setTimeout(() => {
+        determineCorrectAnswer(answer);
+      }, 750);
+    });
+  };
 
   return (
     <LayoutGroup>
-      <motion.div className="bg-bg-primary min-h-screen w-screen flex flex-col   items-start justify-center">
+      <motion.div className="bg-bg-primary min-h-screen w-screen flex flex-col items-start justify-center">
         <motion.h1
           layout
           initial={{ opacity: 0, scale: 0.5 }}
@@ -72,24 +70,31 @@ function Questions({
         >
           Encounter
         </motion.h1>
-        <DialogueBox dialogue={dialogueBox} />
-
-        <div
-          onClick={() =>
-            setDialogueBox((prev) => {
-              return [
-                ...prev,
-                {
-                  type: "answer",
-                  src: "Me",
-                  text: "In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?In order to free me and acquire this domain you must prove your worth. Are you ready to challenge me ?",
-                },
-              ];
-            })
-          }
+        <motion.div
+          layout
+          ref={divRef}
+          className="w-full overflow-y-scroll h-[75vh] "
         >
-          answers
-        </div>
+          <DialogueBox dialogue={dialogueBox} />
+        </motion.div>
+
+        <ul className="grid grid-cols-2 w-full p-2 gap-2">
+          {tryGuessing &&
+            currentQuestion.possible_answers.map(
+              (answer: string, index: number) => {
+                return (
+                  <li className="" key={index}>
+                    <Button
+                      text={answer}
+                      onClick={() => {
+                        handleAnswer(answer);
+                      }}
+                    />
+                  </li>
+                );
+              }
+            )}
+        </ul>
       </motion.div>
     </LayoutGroup>
   );
