@@ -1,11 +1,13 @@
-import { motion, LayoutGroup } from "framer-motion";
+import { motion, LayoutGroup, AnimatePresence } from "framer-motion";
 import { InferGetServerSidePropsType } from "next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import DialogueBox from "../components/DialogueBox";
 import MultipleSentences from "../components/MultipleSentences";
 import { getQuestions } from "../fetch-data";
+import { answersAnimate, textBubbleAnimate, variants } from "../globals/animations";
 import { introduction } from "../globals/introduction";
+import { responses_after_wrong_answer } from "../globals/responses";
 
 function Questions({
   _questions,
@@ -13,17 +15,17 @@ function Questions({
   const divRef = useRef<HTMLDivElement>(null!);
   const [tryGuessing, setTryGuessing] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(_questions[0]);
+  const [arrayOfWrongResponses, setArrayOfWrongResponses] = useState(responses_after_wrong_answer)
   const [dialogueBox, setDialogueBox] = useState(introduction);
-  const [myAnswer, setMyAnswer] = useState("");
 
   useEffect(() => {
     if (!divRef.current) return;
-    divRef.current.scrollTop = divRef.current.scrollHeight;
+    divRef.current.scrollTop = divRef.current.scrollHeight + 100;
   }, [dialogueBox]);
 
   const updateCurrentQuestion = () => {
-    setCurrentQuestion(
-      _questions.find((q: any) => q.question_number === q.question_number + 1)
+    setCurrentQuestion((prev:any) => 
+      _questions.find((question:any) => question.question_number === prev.question_number + 1)
     );
   };
 
@@ -39,29 +41,30 @@ function Questions({
       setTryGuessing(false);
       updateCurrentQuestion();
     } else {
+      const randomResponse = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
       setDialogueBox((prev) => [
         ...prev,
-        { type: "question", src: "Me", text: "I don't know" },
+        { type: "question", src: "Me", text: randomResponse },
+        { type: "question", src: "Me", text: randomResponse },
       ]);
+      setArrayOfWrongResponses((prev) => prev.filter((response) => response !== randomResponse))
     }
   };
 
-  const handleAnswer = async (answer: string) => {
-    return new Promise((resolve) => {
-      setMyAnswer(answer);
-      updateDialogueBoxWithAnswer(answer);
-      resolve(true);
-    }).then(() => {
-      setTimeout(() => {
-        determineCorrectAnswer(answer);
-      }, 750);
-    });
+  const handleAnswer = (answer: string) => {
+    updateDialogueBoxWithAnswer(answer);
+    setTimeout(() => {
+      determineCorrectAnswer(answer);
+    }, 750);
   };
+
+  console.log(currentQuestion)
 
   return (
     <LayoutGroup>
       <motion.div className="bg-bg-primary min-h-screen w-screen flex flex-col items-start justify-center">
         <motion.h1
+          onClick={() => setTryGuessing(prev => !prev)}
           layout
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -78,23 +81,22 @@ function Questions({
           <DialogueBox dialogue={dialogueBox} />
         </motion.div>
 
-        <ul className="grid grid-cols-2 w-full p-2 gap-2">
+      <motion.ul  variants={variants} initial="hidden" animate='show' className="grid grid-cols-2 w-full p-2 h-[10vh]  gap-2">
+        <AnimatePresence initial={false} mode='popLayout'>
           {tryGuessing &&
             currentQuestion.possible_answers.map(
               (answer: string, index: number) => {
                 return (
-                  <li className="" key={index}>
+                  <motion.li variants={answersAnimate} exit={{opacity: 0,scale:0.5, y:50}} key={index}>
                     <Button
                       text={answer}
                       onClick={() => {
                         handleAnswer(answer);
                       }}
-                    />
-                  </li>
-                );
-              }
-            )}
-        </ul>
+                      />
+                  </motion.li>)})}
+                      </AnimatePresence>
+        </motion.ul>
       </motion.div>
     </LayoutGroup>
   );
