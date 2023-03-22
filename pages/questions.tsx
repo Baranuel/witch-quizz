@@ -41,8 +41,10 @@ function Questions({
       setTryGuessing(false);
       updateCurrentQuestion();
     } else {
-      const randomResponse = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
       
+      //this should be it's own function
+      const randomResponse = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
+
       //it actually works, if you put multiple objects at the same time it animates them in sequence holy shit.
       setDialogueBox((prev) => [
         ...prev,
