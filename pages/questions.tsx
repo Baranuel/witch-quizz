@@ -42,6 +42,8 @@ function Questions({
       updateCurrentQuestion();
     } else {
       const randomResponse = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
+      
+      //it actually works, if you put multiple objects at the same time it animates them in sequence holy shit.
       setDialogueBox((prev) => [
         ...prev,
         { type: "question", src: "Me", text: randomResponse },
