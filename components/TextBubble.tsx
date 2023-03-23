@@ -22,7 +22,7 @@ function TextBubble({ children, variants, type, nextSentence }: Props) {
     >
       {type === "question" && (
         <h3 className=" flex text-sm text-color-heading min-w-[75px]">
-          - Nimue
+          - Rhysand
         </h3>
       )}
       <TypeAnimation

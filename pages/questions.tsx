@@ -12,17 +12,13 @@ import { responses_after_wrong_answer } from "../globals/responses";
 function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const divRef = useRef<HTMLDivElement>(null!);
   const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
   const [tryGuessing, setTryGuessing] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(_questions[0]);
   const [arrayOfWrongResponses, setArrayOfWrongResponses] = useState(responses_after_wrong_answer)
   const [dialogueBox, setDialogueBox] = useState(introduction);
 
-  useEffect(() => {
-    if (!divRef.current) return;
-    divRef.current.scrollTop = divRef.current.scrollHeight + 100;
-  }, [dialogueBox]);
+
 
   const updateCurrentQuestion = () => {
     setCurrentQuestion((prev:any) => 
@@ -76,26 +72,27 @@ function Questions({
 
   return (
     <LayoutGroup>
-      <motion.div className="bg-bg-primary min-h-screen w-screen flex flex-col items-start justify-center">
-        <motion.h1
+      <motion.div className="flex flex-col justify-between h-screen">
+
+      <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
+        <motion.div
+          layout
+          className="mt-24"
+          >
+          <motion.h1
           onClick={() => setTryGuessing(prev => !prev)}
           layout
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.25 }}
           className="text-[calc(100vw/10)] mb-4 px-4 font-k2d text-color-heading "
-        >
+          >
           Encounter
         </motion.h1>
-        <motion.div
-          layout
-          ref={divRef}
-          className="w-full overflow-y-scroll h-[75vh] "
-        >
           <DialogueBox numberOfAddedBubbles={numberOfAddedBubbles} dialogue={dialogueBox} />
         </motion.div>
 
-      <motion.ul  variants={variants} initial="hidden" animate='show' className="grid grid-cols-2 w-full p-2 h-[10vh]  gap-2">
+      <motion.ul  variants={variants} initial="hidden" animate='show' className="grid grid-cols-2 w-full p-2   gap-2">
         <AnimatePresence initial={false} mode='popLayout'>
           {tryGuessing &&
             currentQuestion.possible_answers.map(
@@ -112,6 +109,7 @@ function Questions({
                       </AnimatePresence>
         </motion.ul>
       </motion.div>
+    </motion.div>
     </LayoutGroup>
   );
 }
