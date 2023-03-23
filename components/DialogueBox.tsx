@@ -5,12 +5,13 @@ import TextBubble from "./TextBubble";
 
 interface Props {
   dialogue: Record<string, any>[];
+  numberOfAddedBubbles: number;
 }
 
-function DialogueBox({ dialogue }: Props) {
+function DialogueBox({ dialogue, numberOfAddedBubbles }: Props) {
   const [firstRender, setFirstRender] = useState(true);
   const [sentences, setSentences] = useState([dialogue[0]]);
-  const lastAddedItem = dialogue[dialogue.length - 1];
+  const lastAddedItem = dialogue[dialogue.length - numberOfAddedBubbles];
 
   useEffect(() => {
     //ugly hack to prevent the first sentence from being added twice

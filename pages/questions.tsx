@@ -13,6 +13,7 @@ function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const divRef = useRef<HTMLDivElement>(null!);
+  const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
   const [tryGuessing, setTryGuessing] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(_questions[0]);
   const [arrayOfWrongResponses, setArrayOfWrongResponses] = useState(responses_after_wrong_answer)
@@ -30,30 +31,39 @@ function Questions({
   };
 
   const updateDialogueBoxWithAnswer = (answer: string) => {
+    setNumberOfAddedBubbles(1)
     setDialogueBox((prev) => [
       ...prev,
       { type: "answer", src: "Me", text: answer },
     ]);
   };
 
+  const updateDialogueAfterWrongAnswer = () => {
+    const randomResponse = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
+    const randomResponse1 = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
+    //testing if we can update in sequence
+    const text = [{ type: "question", src: "Nimue", text: randomResponse,},{ type: "question", src: "Nimue", text: randomResponse1}]
+    updateDialogueBoxInSequence(text,2)
+    setArrayOfWrongResponses((prev) => prev.filter((response) => response !== randomResponse))
+   }
+
+   const updateDialogueBoxInSequence = (bubbles:any[], numberOfAddedBubbles?:any) => {
+      setNumberOfAddedBubbles((prev) => numberOfAddedBubbles || 1);
+      setDialogueBox((prev) => [
+        ...prev.concat(bubbles)
+      ]);
+   }
+  
+
   const determineCorrectAnswer = (answer: string) => {
     if (answer === currentQuestion.correct_answer) {
       setTryGuessing(false);
       updateCurrentQuestion();
     } else {
-      
-      //this should be it's own function
-      const randomResponse = arrayOfWrongResponses[Math.floor(Math.random() * arrayOfWrongResponses.length)]
-
-      //it actually works, if you put multiple objects at the same time it animates them in sequence holy shit.
-      setDialogueBox((prev) => [
-        ...prev,
-        { type: "question", src: "Me", text: randomResponse },
-        { type: "question", src: "Me", text: randomResponse },
-      ]);
-      setArrayOfWrongResponses((prev) => prev.filter((response) => response !== randomResponse))
-    }
+      updateDialogueAfterWrongAnswer();
+     
   };
+}
 
   const handleAnswer = (answer: string) => {
     updateDialogueBoxWithAnswer(answer);
@@ -82,7 +92,7 @@ function Questions({
           ref={divRef}
           className="w-full overflow-y-scroll h-[75vh] "
         >
-          <DialogueBox dialogue={dialogueBox} />
+          <DialogueBox numberOfAddedBubbles={numberOfAddedBubbles} dialogue={dialogueBox} />
         </motion.div>
 
       <motion.ul  variants={variants} initial="hidden" animate='show' className="grid grid-cols-2 w-full p-2 h-[10vh]  gap-2">

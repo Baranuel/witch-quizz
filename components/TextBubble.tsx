@@ -37,7 +37,7 @@ function TextBubble({ children, variants, type, nextSentence }: Props) {
         ]}
         className="  min-w-4/5 text-sm "
         wrapper="p"
-        speed={75}
+        speed={99}
         cursor={false}
       />
     </motion.div>
