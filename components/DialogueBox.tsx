@@ -10,6 +10,7 @@ interface Props {
 }
 
 function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing }: Props) {
+
   const [firstRender, setFirstRender] = useState(true);
   const [sentences, setSentences] = useState([dialogue[0]]);
   const lastAddedItem = dialogue[dialogue.length - numberOfAddedBubbles];
@@ -18,7 +19,6 @@ function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing }: Props) 
 
   useEffect(() => {
     if (!divRef.current) return;
-    console.log("scrolling");
     divRef.current.scrollTop = divRef.current.scrollHeight + 100 ;
   },[sentences, isWriting]);
 
@@ -38,6 +38,7 @@ function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing }: Props) 
 
   const nextSentence = (index: number) => {
     if (index >= dialogue.length - 1) return;
+
     setTimeout(() => {
       setSentences((prev) => [...prev, dialogue[index + 1]]);
     }, 750);
@@ -57,9 +58,10 @@ function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing }: Props) 
         const { text } = bubble;
         return (
           <TextBubble
-          setIsWriting={setIsWriting}
+            setIsWriting={setIsWriting}
             setTryGuessing={setTryGuessing}
             nextSentence={() => nextSentence(index)}
+            clue={bubble.clue}
             src={bubble.src}
             question={bubble.question}
             variants={variants}

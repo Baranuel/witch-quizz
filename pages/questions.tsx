@@ -22,6 +22,7 @@ interface DialogueBubbleDto {
   question?: boolean ;
   src: string;
   text: string;
+  clue?: string;
 }
 
 function Questions({
@@ -29,7 +30,6 @@ function Questions({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   const story:questionDto[] = introduction.concat(_questions)
-
   const [firstRender, setFirstRender] = useState(true);
   const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
   const [tryGuessing, setTryGuessing] = useState(false);
@@ -37,11 +37,13 @@ function Questions({
   const [arrayOfWrongResponses, setArrayOfWrongResponses] = useState(responses_after_wrong_answer)
   const [dialogueBox, setDialogueBox] = useState<DialogueBubbleDto[]>(currentQuestion.story);
 
+  const isLastQuestion = currentQuestion.question_number === story[story.length - 1].question_number
+
   useEffect( () => {
     if(!firstRender) {
+
       const {question} = currentQuestion
-      console.log(question)
-      updateDialogueBoxInSequence(currentQuestion.story.concat(question))
+      updateDialogueBoxInSequence(currentQuestion.story, question)
     } else {
       setFirstRender(false)
     }
@@ -50,6 +52,7 @@ function Questions({
 
 
   const updateCurrentQuestion = () => {
+    if(isLastQuestion) return;
     setCurrentQuestion((prev) => {
       return {
         ...story[prev.question_number + 1],
@@ -75,21 +78,22 @@ function Questions({
     setArrayOfWrongResponses((prev) => prev.filter((response) => response !== randomResponse))
    }
 
-   const updateDialogueBoxInSequence = (bubbles:DialogueBubbleDto[]) => {
-      setNumberOfAddedBubbles((prev) => bubbles.length);
+   const updateDialogueBoxInSequence = (bubbles:DialogueBubbleDto[], question?:DialogueBubbleDto) => {
+      const arrayOfStoryAndQuestion = question ? bubbles.concat(question) : bubbles
+      setNumberOfAddedBubbles((prev) => arrayOfStoryAndQuestion.length);
       setDialogueBox((prev:any) => [
-        ...prev.concat(bubbles)
+        ...prev.concat(arrayOfStoryAndQuestion)
       ]);
    }
   
 
   const determineCorrectAnswer = (answer: string) => {
+    console.log(currentQuestion)
     if (answer === currentQuestion.correct_answer) {
       setTryGuessing(false);
       updateCurrentQuestion();
     } else {
       updateDialogueAfterWrongAnswer();
-     
   };
 }
 
