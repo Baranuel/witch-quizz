@@ -5,20 +5,22 @@ import TextBubble from "./TextBubble";
 
 interface Props {
   dialogue: Record<string, any>[];
+  setTryGuessing: React.Dispatch<React.SetStateAction<boolean>>;
   numberOfAddedBubbles: number;
 }
 
-function DialogueBox({ dialogue, numberOfAddedBubbles }: Props) {
+function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing }: Props) {
   const [firstRender, setFirstRender] = useState(true);
   const [sentences, setSentences] = useState([dialogue[0]]);
   const lastAddedItem = dialogue[dialogue.length - numberOfAddedBubbles];
+  const [isWriting, setIsWriting] = useState(false);
   const divRef = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
     if (!divRef.current) return;
     console.log("scrolling");
-    divRef.current.scrollTop = divRef.current.scrollHeight ;
-  },[sentences]);
+    divRef.current.scrollTop = divRef.current.scrollHeight + 100 ;
+  },[sentences, isWriting]);
 
   useEffect(() => {
     //ugly hack to prevent the first sentence from being added twice
@@ -27,7 +29,7 @@ function DialogueBox({ dialogue, numberOfAddedBubbles }: Props) {
         () => {
           setSentences((prev) => [...prev, lastAddedItem]);
         },
-        lastAddedItem.src === "Nimue" ? 750 : 0
+        lastAddedItem.src === "Rhysand" ? 750 : 0
       );
     } else {
       setFirstRender(false);
@@ -49,14 +51,17 @@ function DialogueBox({ dialogue, numberOfAddedBubbles }: Props) {
       initial="hidden"
       layout
 
-      className="flex flex-col scroll-smooth items-center w-full overflow-y-scroll h-[65vh] pb-12 px-4 "
+      className="flex flex-col scroll-smooth items-start w-full overflow-y-scroll h-[70vh] pb-12 px-4 "
     >
       {sentences.map((bubble, index) => {
         const { text } = bubble;
         return (
           <TextBubble
+          setIsWriting={setIsWriting}
+            setTryGuessing={setTryGuessing}
             nextSentence={() => nextSentence(index)}
-            type={bubble.type}
+            src={bubble.src}
+            question={bubble.question}
             variants={variants}
             key={index}
           >

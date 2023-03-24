@@ -3,7 +3,7 @@ export const variants = {
   show: {
     opacity: 1,
     scale: 1,
-    transition: { staggerChildren: 1, delayChildren: 0.3,},
+    transition: { staggerChildren: 0.5},
   },
 };
 
@@ -14,5 +14,5 @@ export const textBubbleAnimate = {
 
 export const answersAnimate = {
   hidden: { opacity: 0, scale: 0.5, y: 50 },
-  show: { opacity: 1, scale: 1, y: 0 },
+  show: { opacity: 1, scale: 1, y: 0, },
 }
