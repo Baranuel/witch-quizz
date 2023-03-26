@@ -51,10 +51,23 @@ function Questions({
   const appRef = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    if (!appRef.current) return;
-    appRef.current.scrollIntoView({ behavior: "smooth" });
+    window.addEventListener('load', () => {
+      setTimeout(function () {
+        // Hide the address bar!
+        window.scrollTo(0, 1);
+    }, 100);
+    })
+
+    return () => {
+      window.removeEventListener('load', () => {
+        setTimeout(function () {
+          // Hide the address bar!
+          window.scrollTo(0, 1);
+      }, 100);
+      })
+    }
   }, []);
-  
+
 
   useEffect(() => {
     if (!firstRender) {
