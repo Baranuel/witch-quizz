@@ -41,9 +41,20 @@ function Questions({
   const isLastQuestion = currentQuestion.question_number === story[story.length - 1].question_number
   const [revealClues, setRevealClues] = useState(isLastQuestion && tryGuessing);
 
+  useEffect(() => {
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 1)
+    })
+
+    return () => {
+      window.removeEventListener('load', () => {
+        window.scrollTo(0, 1)
+      })
+    }
+  }, [])
+
   useEffect( () => {
     if(!firstRender) {
-
       const {question} = currentQuestion
       updateDialogueBoxInSequence(currentQuestion.story, question)
     } else {
@@ -107,14 +118,13 @@ function Questions({
 
 
   return (
+    <>
+    
+    
       <motion.div className="flex flex-col justify-between h-screen">
     <LayoutGroup>
 
       <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
-        <Head>
-          <meta name="mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-capable" content="yes"/>
-        </Head>
         <motion.div
           layout
           className="mt-2"
@@ -177,6 +187,7 @@ function Questions({
       </motion.div>
     </LayoutGroup>
     </motion.div>
+    </>
   );
 }
 
