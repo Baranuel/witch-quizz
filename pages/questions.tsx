@@ -112,7 +112,7 @@ function Questions({
       <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
         <motion.div
           layout
-          className="mt-12"
+          className="mt-2"
           >
           <motion.h1
           onClick={() => setTryGuessing(prev => !prev)}
@@ -154,7 +154,7 @@ function Questions({
          
          <AnimatePresence initial={false} mode='popLayout'>
           {isLastQuestion && 
-         <motion.div variants={variants} initial="hidden" animate='show' exit={{opacity: 0,scale:0.5, y:50}} className="flex h-[120px] items-center p-2 w-full gap-2 justify-between">
+         <motion.div variants={variants} initial="hidden" animate='show' exit={{opacity: 0,scale:0.5, y:50}} className="flex h-[100px] items-center p-2 w-full gap-2 justify-between">
             <AnimatePresence initial={false} mode='popLayout'>
           {tryGuessing &&
             <motion.div variants={answersAnimate} exit={{opacity: 0,scale:0.5, y:50}} className=" flex items-center w-full gap-2 justify-between">

@@ -55,7 +55,7 @@ function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing, revealClu
       initial="hidden"
       layout
 
-      className="flex flex-col scroll-smooth items-start w-full overflow-y-scroll h-[65vh] pb-24 px-4 "
+      className="flex flex-col scroll-smooth items-start w-full overflow-y-scroll h-[calc(100vh-100px-150px)] pb-32 px-4 "
     >
       {sentences.map((bubble, index) => {
         const { text } = bubble;
