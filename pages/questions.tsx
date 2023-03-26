@@ -114,7 +114,7 @@ function Questions({
     <>
     
     
-  <motion.div ref={appRef} className="flex flex-col justify-between h-screen">
+  <motion.div ref={appRef} className="flex flex-col justify-between h-[105vh]">
     <LayoutGroup>
 
       <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
