@@ -33,40 +33,35 @@ interface DialogueBubbleDto {
 function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
   const story: questionDto[] = introduction.concat(_questions);
+  const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[0]);
+
   const [firstRender, setFirstRender] = useState(true);
   const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
   const [tryGuessing, setTryGuessing] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[0]);
+
   const [arrayOfWrongResponses, setArrayOfWrongResponses] = useState(
     responses_after_wrong_answer
   );
+
   const [dialogueBox, setDialogueBox] = useState<DialogueBubbleDto[]>(
     currentQuestion.story
   );
 
   const isLastQuestion =
     currentQuestion.question_number === story[story.length - 1].question_number;
+    
   const [revealClues, setRevealClues] = useState(isLastQuestion && tryGuessing);
-  const appRef = useRef<HTMLDivElement>(null!);
 
-  useEffect(() => {
-    window.addEventListener('load', () => {
-      setTimeout(function () {
-        // Hide the address bar!
-        window.scrollTo(0, 1);
-    }, 100);
-    })
+  const [spellCast, setSpellCast] = useState<string>('');
 
-    return () => {
-      window.removeEventListener('load', () => {
-        setTimeout(function () {
-          // Hide the address bar!
-          window.scrollTo(0, 1);
-      }, 100);
-      })
-    }
-  }, []);
+  const castTheSpell = () => {
+    console.log(spellCast)
+    if(spellCast !== currentQuestion.correct_answer) return
+    alert("You guessed correctly! You win!")
+  }
+
 
 
   useEffect(() => {
@@ -136,7 +131,6 @@ function Questions({
   return (
     <>
       <motion.div
-        ref={appRef}
         className="flex flex-col justify-between h-screen"
       >
         <LayoutGroup>
@@ -215,11 +209,12 @@ function Questions({
                         className=" flex items-center w-full gap-2 justify-between"
                       >
                         <input
+                          onChange={(e) => setSpellCast(e.target.value)}
                           type="text"
                           className="bg-bg-secondary text-color-heading p-3 w-full basis-2/3 rounded-md bg-custom-black/30 border border-color-primary "
                         />
                         <div className="w-full basis-1/3">
-                          <Button text="Cast" onClick={() => {}} />
+                          <Button text="Cast" onClick={() => castTheSpell()} />
                         </div>
                       </motion.div>
                     )}
