@@ -8,6 +8,7 @@ import { getQuestions } from "../fetch-data";
 import { answersAnimate, textBubbleAnimate, variants } from "../globals/animations";
 import { introduction } from "../globals/introduction";
 import { responses_after_wrong_answer } from "../globals/responses";
+import { Head } from "next/document";
 
 interface questionDto {
   id?: ObjectId;
@@ -110,6 +111,10 @@ function Questions({
     <LayoutGroup>
 
       <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
+        <Head>
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-capable" content="yes"/>
+        </Head>
         <motion.div
           layout
           className="mt-2"
