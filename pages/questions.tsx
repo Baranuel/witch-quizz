@@ -38,6 +38,7 @@ function Questions({
   const [dialogueBox, setDialogueBox] = useState<DialogueBubbleDto[]>(currentQuestion.story);
 
   const isLastQuestion = currentQuestion.question_number === story[story.length - 1].question_number
+  const [revealClues, setRevealClues] = useState(isLastQuestion && tryGuessing);
 
   useEffect( () => {
     if(!firstRender) {
@@ -49,7 +50,7 @@ function Questions({
     }
   },[currentQuestion])
 
-
+  
 
   const updateCurrentQuestion = () => {
     if(isLastQuestion) return;
@@ -88,7 +89,6 @@ function Questions({
   
 
   const determineCorrectAnswer = (answer: string) => {
-    console.log(currentQuestion)
     if (answer === currentQuestion.correct_answer) {
       setTryGuessing(false);
       updateCurrentQuestion();
@@ -124,27 +124,51 @@ function Questions({
           >
           Encounter
         </motion.h1>
-          <DialogueBox numberOfAddedBubbles={numberOfAddedBubbles} dialogue={dialogueBox} setTryGuessing={setTryGuessing} />
+          <DialogueBox isLastQuestion={isLastQuestion} numberOfAddedBubbles={numberOfAddedBubbles} dialogue={dialogueBox} setTryGuessing={setTryGuessing} revealClues={revealClues} setRevealClues={setRevealClues} />
         </motion.div>
 
-    <motion.ul  variants={variants} initial="hidden" animate='show' className="grid grid-cols-2 w-full p-2 
-   h-[120px] items-center gap-2">
+  <AnimatePresence initial={false} mode='popLayout'>
+   {!isLastQuestion &&
+    <motion.ul  variants={variants} initial="hidden" animate='show' exit={{opacity: 0,scale:0.5, y:50}} className="grid grid-cols-2 w-full p-2 
+    h-[120px] items-center gap-2">
         <AnimatePresence initial={false} mode='popLayout'>
+
+           {tryGuessing &&
+             currentQuestion.possible_answers.map(
+               (answer: string, index: number) => {
+                 return (
+                   <motion.li variants={answersAnimate} exit={{opacity: 0,scale:0.5, y:50}}   transition={{ duration: 0.3 }}
+                      key={index} className='w-full'>
+                     <Button
+                       text={answer}
+                       onClick={() => {
+                         handleAnswer(answer);
+                       }}
+                       />
+                   </motion.li>)})
+                   
+                  }
+                  </AnimatePresence>
+         </motion.ul> }
+         </AnimatePresence>
+         
+         <AnimatePresence initial={false} mode='popLayout'>
+          {isLastQuestion && 
+         <motion.div variants={variants} initial="hidden" animate='show' exit={{opacity: 0,scale:0.5, y:50}} className="flex h-[120px] items-center p-2 w-full gap-2 justify-between">
+            <AnimatePresence initial={false} mode='popLayout'>
           {tryGuessing &&
-            currentQuestion.possible_answers.map(
-              (answer: string, index: number) => {
-                return (
-                  <motion.li variants={answersAnimate} exit={{opacity: 0,scale:0.5, y:50}}   transition={{ duration: 0.3 }}
-                  key={index}>
-                    <Button
-                      text={answer}
-                      onClick={() => {
-                        handleAnswer(answer);
-                      }}
-                      />
-                  </motion.li>)})}
-                      </AnimatePresence>
-        </motion.ul>
+            <motion.div variants={answersAnimate} exit={{opacity: 0,scale:0.5, y:50}} className=" flex items-center w-full gap-2 justify-between">
+            <input type="text" className="bg-bg-secondary text-color-heading p-3 w-full basis-2/3 rounded-md bg-custom-black/30 border border-color-primary "/>
+            <div className="w-full basis-1/3">
+            <Button text="Cast" onClick={() => {}} />
+            </div>
+            </motion.div>
+            }
+            </AnimatePresence>
+            
+          </motion.div>
+         }
+         </AnimatePresence>
       </motion.div>
     </LayoutGroup>
     </motion.div>

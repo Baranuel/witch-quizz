@@ -4,16 +4,19 @@ import { TypeAnimation } from "react-type-animation";
 
 interface Props {
   children?: React.ReactNode;
+  isLastQuestion?: boolean;
   setTryGuessing?: React.Dispatch<React.SetStateAction<boolean>>;
+  setRevealClues?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsWriting: React.Dispatch<React.SetStateAction<boolean>>;
   question?: boolean;
   clue?: string;
   src: string;
   variants: Record<string, any>;
+  revealClues?: boolean;
   nextSentence?: () => void;
 }
 
-function TextBubble({ children, variants, src, nextSentence, question, setTryGuessing, setIsWriting , clue}: Props) {
+function TextBubble({ children, variants, src, nextSentence, question, setTryGuessing, setIsWriting , clue, revealClues, setRevealClues, isLastQuestion}: Props) {
   return (
     <motion.div
       layout
@@ -22,12 +25,12 @@ function TextBubble({ children, variants, src, nextSentence, question, setTryGue
         src === "Rhysand"
           ? " min-w-full text-left"
           : " min-w-fit text-left self-end"
-      }  text-color-text ${clue ? "bg-cobalt-blue/30":"bg-custom-black/20 "} rounded-xl py-6 px-4 mb-4  font-k2d  `}
+      }  text-color-text ${clue && revealClues? "bg-cobalt-blue/20":"bg-custom-black/20 "} rounded-xl py-6 px-4 mb-4  font-k2d transition-colors duration-300  `}
     >
       {src === "Rhysand" && (
         <div className=" flex flex-col justify-between text-sm text-color-heading min-w-[75px]">
           <h3>- Rhysand</h3>
-          <h3>{clue && clue}</h3>
+          <h3>{clue && revealClues && clue}</h3>
         </div>
       )}
       <TypeAnimation
@@ -42,6 +45,7 @@ function TextBubble({ children, variants, src, nextSentence, question, setTryGue
              new Promise((resolve) => {
              setTimeout(() => {
               question && setTryGuessing && setTryGuessing(true);
+              question && isLastQuestion && setRevealClues && setRevealClues(true);
               resolve(true)
              }, 250)
              });
