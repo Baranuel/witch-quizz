@@ -40,17 +40,10 @@ function Questions({
 
   const isLastQuestion = currentQuestion.question_number === story[story.length - 1].question_number
   const [revealClues, setRevealClues] = useState(isLastQuestion && tryGuessing);
-
+  const appRef = useRef<HTMLDivElement>(null!);
   useEffect(() => {
-    window.addEventListener('load', () => {
-      window.scrollTo(0, 1)
-    })
-
-    return () => {
-      window.removeEventListener('load', () => {
-        window.scrollTo(0, 1)
-      })
-    }
+   if(!appRef.current) return;
+    appRef.current.scrollIntoView({behavior: "smooth"})
   }, [])
 
   useEffect( () => {
@@ -121,7 +114,7 @@ function Questions({
     <>
     
     
-      <motion.div className="flex flex-col justify-between h-screen">
+  <motion.div ref={appRef} className="flex flex-col justify-between h-screen">
     <LayoutGroup>
 
       <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
