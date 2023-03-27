@@ -6,13 +6,14 @@ import TextBubble from "./TextBubble";
 interface Props {
   dialogue: Record<string, any>[];
   isLastQuestion: boolean;
+  handleStartSpellCast: () => void;
   setTryGuessing: React.Dispatch<React.SetStateAction<boolean>>;
   setRevealClues: React.Dispatch<React.SetStateAction<boolean>>;
   numberOfAddedBubbles: number;
   revealClues: boolean;
 }
 
-function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing, revealClues, setRevealClues, isLastQuestion }: Props) {
+function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing, revealClues, setRevealClues, isLastQuestion, handleStartSpellCast }: Props) {
 
   const [firstRender, setFirstRender] = useState(true);
   const [sentences, setSentences] = useState([dialogue[0]]);
@@ -61,6 +62,7 @@ function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing, revealClu
         const { text } = bubble;
         return (
           <TextBubble
+          handleStartSpellCast={handleStartSpellCast}
           isLastQuestion={isLastQuestion}
             revealClues={revealClues}
             setRevealClues={setRevealClues}

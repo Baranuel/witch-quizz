@@ -13,10 +13,24 @@ interface Props {
   src: string;
   variants: Record<string, any>;
   revealClues?: boolean;
+  handleStartSpellCast?: () => void;
   nextSentence?: () => void;
 }
 
-function TextBubble({ children, variants, src, nextSentence, question, setTryGuessing, setIsWriting , clue, revealClues, setRevealClues, isLastQuestion}: Props) {
+function TextBubble({
+  children,
+  variants,
+  src,
+  nextSentence,
+  question,
+  setTryGuessing,
+  setIsWriting,
+  clue,
+  revealClues,
+  setRevealClues,
+  isLastQuestion,
+  handleStartSpellCast  
+}: Props) {
   return (
     <motion.div
       layout
@@ -25,7 +39,9 @@ function TextBubble({ children, variants, src, nextSentence, question, setTryGue
         src === "Rhysand"
           ? " min-w-full text-left"
           : " min-w-fit text-left self-end"
-      }  text-color-text ${clue && revealClues? "bg-cobalt-blue/20":"bg-custom-black/20 "} rounded-xl py-6 px-4 mb-4  font-k2d transition-colors duration-300  `}
+      }  text-color-text ${
+        clue && revealClues ? "bg-cobalt-blue/20" : "bg-custom-black/20 "
+      } rounded-xl py-6 px-4 mb-4  font-k2d transition-colors duration-300  `}
     >
       {src === "Rhysand" && (
         <div className=" flex flex-col justify-between text-sm text-color-heading min-w-[75px]">
@@ -36,19 +52,22 @@ function TextBubble({ children, variants, src, nextSentence, question, setTryGue
       <TypeAnimation
         sequence={[
           () => {
-            setIsWriting(true)
+            setIsWriting(true);
             return new Promise((resolve) => setTimeout(resolve, 250));
           },
           children as string,
-          () => {      
-            setIsWriting(false)     
-             new Promise((resolve) => {
-             setTimeout(() => {
-              question && setTryGuessing && setTryGuessing(true);
-              question && isLastQuestion && setRevealClues && setRevealClues(true);
-              resolve(true)
-             }, 250)
-             });
+          () => {
+            setIsWriting(false);
+            new Promise((resolve) => {
+              setTimeout(() => {
+                question && setTryGuessing && setTryGuessing(true);
+                question &&
+                  isLastQuestion &&
+                  handleStartSpellCast &&
+                  handleStartSpellCast()
+                resolve(true);
+              }, 250);
+            });
 
             nextSentence && nextSentence();
           },

@@ -12,7 +12,7 @@ import {
 } from "../globals/animations";
 import { introduction } from "../globals/introduction";
 import { responses_after_wrong_answer } from "../globals/responses";
-import { Head } from "next/document";
+import Countdown from "../components/Countdown";
 
 interface questionDto {
   id?: ObjectId;
@@ -48,6 +48,8 @@ function Questions({
   const [dialogueBox, setDialogueBox] = useState<DialogueBubbleDto[]>(
     currentQuestion.story
   );
+
+  const [showCountdown, setShowCountdown] = useState(false)
 
   const isLastQuestion =
     currentQuestion.question_number === story[story.length - 1].question_number;
@@ -128,6 +130,11 @@ function Questions({
     }, 750);
   };
 
+  const handleStartSpellCast = () => {
+      setRevealClues(true)
+      setShowCountdown(true)
+  }
+
   return (
     <>
       <motion.div
@@ -136,17 +143,21 @@ function Questions({
         <LayoutGroup>
           <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
             <motion.div layout className="mt-2">
-              <motion.h1
-                onClick={() => setTryGuessing((prev) => !prev)}
+           <motion.div className=" flex items-center justify-between w-screen mb-4">
+           <motion.h1
+                onClick={() => setShowCountdown((prev) => !prev)}
                 layout
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.25 }}
-                className="text-[calc(100vw/10)] mb-4 px-4 font-k2d text-color-heading "
+                className="text-[calc(100vw/10)] px-4 font-k2d text-color-heading "
               >
                 Encounter
               </motion.h1>
+             {showCountdown &&  <Countdown number={30} />}
+           </motion.div>
               <DialogueBox
+              handleStartSpellCast={handleStartSpellCast}
                 isLastQuestion={isLastQuestion}
                 numberOfAddedBubbles={numberOfAddedBubbles}
                 dialogue={dialogueBox}
