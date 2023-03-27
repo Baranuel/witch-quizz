@@ -210,7 +210,7 @@ function Questions({
                   initial="hidden"
                   animate="show"
                   exit={{ opacity: 0, scale: 0.5, y: 50 }}
-                  className="flex h-[100px] items-center p-2 w-full gap-2 justify-between"
+                  className="flex h-[100px] items-center p-2 w-full gap-2 justify-between fixed bottom-0 "
                 >
                   <AnimatePresence initial={false} mode="popLayout">
                     {tryGuessing && (
