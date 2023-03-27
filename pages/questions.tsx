@@ -35,7 +35,7 @@ function Questions({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   const story: questionDto[] = introduction.concat(_questions);
-  const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[0]);
+  const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[4]);
 
   const [firstRender, setFirstRender] = useState(true);
   const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
@@ -59,8 +59,8 @@ function Questions({
   const [spellCast, setSpellCast] = useState<string>('');
 
   const castTheSpell = () => {
-    console.log(spellCast)
-    if(spellCast !== currentQuestion.correct_answer) return
+    const spell = spellCast.toUpperCase()
+    if(spell !== currentQuestion.correct_answer) return
     alert("You guessed correctly! You win!")
   }
 
@@ -143,7 +143,7 @@ function Questions({
         <LayoutGroup>
           <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
             <motion.div layout className="mt-2">
-           <motion.div className=" flex items-center justify-between w-screen sticky top-0 mb-4">
+           <motion.div className=" flex items-center justify-between bg-bg-primary w-screen sticky top-0 mb-4">
            <motion.h1
                 onClick={() => setShowCountdown((prev) => !prev)}
                 layout
@@ -222,7 +222,7 @@ function Questions({
                         <input
                           onChange={(e) => setSpellCast(e.target.value)}
                           type="text"
-                          className="bg-bg-secondary text-color-heading p-3 w-full basis-2/3 rounded-md bg-custom-black/30 border border-color-primary "
+                          className="bg-bg-secondary text-color-heading p-3 w-full basis-2/3 rounded-md bg-custom-black/30 border border-color-primary uppercase "
                         />
                         <div className="w-full basis-1/3">
                           <Button text="Cast" onClick={() => castTheSpell()} />
