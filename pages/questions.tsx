@@ -35,7 +35,7 @@ function Questions({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   const story: questionDto[] = introduction.concat(_questions);
-  const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[4]);
+  const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[0]);
 
   const [firstRender, setFirstRender] = useState(true);
   const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
