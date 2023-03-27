@@ -143,7 +143,7 @@ function Questions({
         <LayoutGroup>
           <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
             <motion.div layout className="mt-2">
-           <motion.div className=" flex items-center justify-between w-screen mb-4">
+           <motion.div className=" flex items-center justify-between w-screen sticky top-0 mb-4">
            <motion.h1
                 onClick={() => setShowCountdown((prev) => !prev)}
                 layout
@@ -174,7 +174,7 @@ function Questions({
                   initial="hidden"
                   animate="show"
                   exit={{ opacity: 0, scale: 0.5, y: 50 }}
-                  className="grid grid-cols-2 w-full p-2 h-[120px] items-center gap-2"
+                  className="grid grid-cols-2 w-full p-2 h-[120px] items-center fixed bottom-0 gap-2"
                 >
                   <AnimatePresence initial={false} mode="popLayout">
                     {tryGuessing &&
