@@ -28,7 +28,6 @@ export default function Home({
   return (
     <div className="h-screen w-screen bg-bg-primary">
       <EntryScreen entered={entered} setEntered={setEntered} />
-      <Item />
     </div>
   );
 }

@@ -36,10 +36,12 @@ function Questions({
 
   const story: questionDto[] = introduction.concat(_questions);
   const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[0]);
-
+  const [myWrongAnswers, setMyWrongAnswers] = useState<string[]>([]);
   const [firstRender, setFirstRender] = useState(true);
   const [numberOfAddedBubbles, setNumberOfAddedBubbles] = useState(1);
+  const [showDialogueBox, setShowDialogueBox] = useState(true);
   const [tryGuessing, setTryGuessing] = useState(false);
+  const [winState, setWinState] = useState(false);
 
   const [arrayOfWrongResponses, setArrayOfWrongResponses] = useState(
     responses_after_wrong_answer
@@ -59,9 +61,12 @@ function Questions({
   const [spellCast, setSpellCast] = useState<string>('');
 
   const castTheSpell = () => {
-    const spell = spellCast.toUpperCase()
-    if(spell !== currentQuestion.correct_answer) return
-    alert("You guessed correctly! You win!")
+    // const spell = spellCast.toUpperCase()
+    // if(spell !== currentQuestion.correct_answer) return
+    setShowCountdown(false)
+    setTryGuessing(false)
+    setShowDialogueBox(false)
+    setWinState(true)
   }
 
 
@@ -74,6 +79,7 @@ function Questions({
       setFirstRender(false);
     }
   }, [currentQuestion]);
+
 
   const updateCurrentQuestion = () => {
     if (isLastQuestion) return;
@@ -119,6 +125,7 @@ function Questions({
       setTryGuessing(false);
       updateCurrentQuestion();
     } else {
+      setMyWrongAnswers((prev) => [...prev, answer]);
       updateDialogueAfterWrongAnswer();
     }
   };
@@ -141,31 +148,44 @@ function Questions({
         className="flex flex-col justify-between h-screen"
       >
         <LayoutGroup>
-          <motion.div className="bg-bg-primary h-screen w-screen flex flex-col items-start justify-between">
+          <motion.div className={`bg-bg-primary h-screen w-screen flex flex-col items-start justify-between ${!showDialogueBox ? "bg-color-heading transition-bg-color duration-1000" : ""}` }>
             <motion.div layout className="mt-2">
-           <motion.div className=" flex items-center justify-between bg-bg-primary w-screen sticky top-0 mb-4">
+           <motion.div  className= {`flex items-center justify-between bg-bg-primary w-screen sticky top-0 mb-4 ${!showDialogueBox ? "bg-color-heading transition-bg-color duration-1000 h-0" : ""}`}>
            <motion.h1
-                onClick={() => setShowCountdown((prev) => !prev)}
+                onClick={() => castTheSpell()}
                 layout
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.25 }}
-                className="text-[calc(100vw/10)] px-4 font-k2d text-color-heading "
+                className={`text-[calc(100vw/10)] px-4 font-k2d text-color-heading `}
               >
                 Encounter
               </motion.h1>
              {showCountdown &&  <Countdown number={30} />}
            </motion.div>
-              <DialogueBox
-              handleStartSpellCast={handleStartSpellCast}
+           {winState && (
+                    <motion.div initial={{opacity:0}} animate={{opacity:1, transition:{delay:1, duration:1}}} className="flex flex-col items-center justify-center w-full h-screen">
+                      <motion.h1 className="text-3xl">Thank you for saving me</motion.h1>
+                      <motion.p className="text-3xl mt-6">0 0 0 0</motion.p>
+                    </motion.div>
+                  )}
+           <AnimatePresence>
+              {showDialogueBox &&
+                <DialogueBox
+                handleStartSpellCast={handleStartSpellCast}
                 isLastQuestion={isLastQuestion}
                 numberOfAddedBubbles={numberOfAddedBubbles}
                 dialogue={dialogueBox}
                 setTryGuessing={setTryGuessing}
                 revealClues={revealClues}
                 setRevealClues={setRevealClues}
-              />
-            </motion.div>
+                />
+              }
+                </AnimatePresence>
+                <AnimatePresence>
+               
+                </AnimatePresence>
+              </motion.div>
 
             <AnimatePresence initial={false} mode="popLayout">
               {!isLastQuestion && (
@@ -180,6 +200,7 @@ function Questions({
                     {tryGuessing &&
                       currentQuestion.possible_answers.map(
                         (answer: string, index: number) => {
+                          const disabled = myWrongAnswers.includes(answer);
                           return (
                             <motion.li
                               variants={answersAnimate}
@@ -189,9 +210,10 @@ function Questions({
                               className="w-full"
                             >
                               <Button
+                                disabled={disabled}
                                 text={answer}
                                 onClick={() => {
-                                  handleAnswer(answer);
+                                handleAnswer(answer);
                                 }}
                               />
                             </motion.li>

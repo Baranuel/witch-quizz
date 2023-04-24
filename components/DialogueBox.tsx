@@ -51,10 +51,11 @@ function DialogueBox({ dialogue, numberOfAddedBubbles, setTryGuessing, revealClu
   return (
     <motion.div
     ref={divRef}
-      variants={variants}
-      animate="show"
-      initial="hidden"
-      layout
+    variants={variants}
+    animate="show"
+    initial="hidden"
+    exit={{ opacity: 0 , transition:{duration: 1}}}
+    layout
 
       className="flex flex-col scroll-smooth items-start w-full overflow-y-scroll h-[calc(100vh-100px-150px)] pb-32 px-4 "
     >
