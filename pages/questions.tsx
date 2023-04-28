@@ -33,7 +33,6 @@ interface DialogueBubbleDto {
 function Questions({
   _questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-
   const story: questionDto[] = introduction.concat(_questions);
   const [currentQuestion, setCurrentQuestion] = useState<questionDto>(story[0]);
   const [myWrongAnswers, setMyWrongAnswers] = useState<string[]>([]);
@@ -51,25 +50,23 @@ function Questions({
     currentQuestion.story
   );
 
-  const [showCountdown, setShowCountdown] = useState(false)
+  const [showCountdown, setShowCountdown] = useState(false);
 
   const isLastQuestion =
     currentQuestion.question_number === story[story.length - 1].question_number;
-    
+
   const [revealClues, setRevealClues] = useState(isLastQuestion && tryGuessing);
 
-  const [spellCast, setSpellCast] = useState<string>('');
+  const [spellCast, setSpellCast] = useState<string>("");
 
   const castTheSpell = () => {
     // const spell = spellCast.toUpperCase()
     // if(spell !== currentQuestion.correct_answer) return
-    setShowCountdown(false)
-    setTryGuessing(false)
-    setShowDialogueBox(false)
-    setWinState(true)
-  }
-
-
+    setShowCountdown(false);
+    setTryGuessing(false);
+    setShowDialogueBox(false);
+    setWinState(true);
+  };
 
   useEffect(() => {
     if (!firstRender) {
@@ -79,7 +76,6 @@ function Questions({
       setFirstRender(false);
     }
   }, [currentQuestion]);
-
 
   const updateCurrentQuestion = () => {
     if (isLastQuestion) return;
@@ -138,54 +134,76 @@ function Questions({
   };
 
   const handleStartSpellCast = () => {
-      setRevealClues(true)
-      setShowCountdown(true)
-  }
+    setRevealClues(true);
+    setShowCountdown(true);
+  };
 
   return (
     <>
-      <motion.div
-        className="flex flex-col justify-between h-screen"
-      >
+      <motion.div className="flex flex-col justify-between h-screen">
         <LayoutGroup>
-          <motion.div className={`bg-bg-primary h-screen w-screen flex flex-col items-start justify-between ${!showDialogueBox ? "bg-color-heading transition-bg-color duration-1000" : ""}` }>
+          <motion.div
+            className={`bg-bg-primary h-screen w-screen flex flex-col items-start justify-between ${
+              !showDialogueBox
+                ? "bg-color-heading transition-bg-color duration-1000"
+                : ""
+            }`}
+          >
             <motion.div layout className="mt-2">
-           <motion.div  className= {`flex items-center justify-between bg-bg-primary w-screen sticky top-0 mb-4 ${!showDialogueBox ? "bg-color-heading transition-bg-color duration-1000 h-0" : ""}`}>
-           <motion.h1
-                onClick={() => castTheSpell()}
-                layout
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.25 }}
-                className={`text-[calc(100vw/10)] px-4 font-k2d text-color-heading `}
+              <motion.div
+                className={`flex items-center justify-between bg-bg-primary w-screen sticky top-0 mb-4 ${
+                  !showDialogueBox
+                    ? "bg-color-heading transition-bg-color duration-1000 h-0"
+                    : ""
+                }`}
               >
-                Encounter
-              </motion.h1>
-             {showCountdown &&  <Countdown number={30} />}
-           </motion.div>
-           {winState && (
-                    <motion.div initial={{opacity:0}} animate={{opacity:1, transition:{delay:1, duration:1}}} className="flex flex-col items-center justify-center w-full h-screen">
-                      <motion.h1 className="text-3xl">Thank you for saving me</motion.h1>
-                      <motion.p className="text-3xl mt-6">0 0 0 0</motion.p>
-                    </motion.div>
-                  )}
-           <AnimatePresence>
-              {showDialogueBox &&
-                <DialogueBox
-                handleStartSpellCast={handleStartSpellCast}
-                isLastQuestion={isLastQuestion}
-                numberOfAddedBubbles={numberOfAddedBubbles}
-                dialogue={dialogueBox}
-                setTryGuessing={setTryGuessing}
-                revealClues={revealClues}
-                setRevealClues={setRevealClues}
-                />
-              }
-                </AnimatePresence>
-                <AnimatePresence>
-               
-                </AnimatePresence>
+                <motion.h1
+                  onClick={() => castTheSpell()}
+                  layout
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.25 }}
+                  className={`text-[calc(100vw/10)] px-4 font-k2d text-color-heading `}
+                >
+                  Encounter
+                </motion.h1>
+                {showCountdown && <Countdown number={30} />}
               </motion.div>
+              {winState && (
+                <motion.div
+                  initial={{ opacity: 0, y: 1000 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: { delay: 1, duration: 0.5 },
+                  }}
+                  className="flex flex-col items-center justify-center h-screen w-screen "
+                >
+                  <motion.h1 className="text-3xl">
+                    Thank you for saving me
+                  </motion.h1>
+                  <motion.h2 className="mt-2 text-xl">
+                    {" "}
+                    You have unlocked this domain
+                  </motion.h2>
+                  <motion.p className="text-3xl mt-6">1 3 0 7</motion.p>
+                </motion.div>
+              )}
+              <AnimatePresence>
+                {showDialogueBox && (
+                  <DialogueBox
+                    handleStartSpellCast={handleStartSpellCast}
+                    isLastQuestion={isLastQuestion}
+                    numberOfAddedBubbles={numberOfAddedBubbles}
+                    dialogue={dialogueBox}
+                    setTryGuessing={setTryGuessing}
+                    revealClues={revealClues}
+                    setRevealClues={setRevealClues}
+                  />
+                )}
+              </AnimatePresence>
+              <AnimatePresence></AnimatePresence>
+            </motion.div>
 
             <AnimatePresence initial={false} mode="popLayout">
               {!isLastQuestion && (
@@ -213,7 +231,7 @@ function Questions({
                                 disabled={disabled}
                                 text={answer}
                                 onClick={() => {
-                                handleAnswer(answer);
+                                  handleAnswer(answer);
                                 }}
                               />
                             </motion.li>

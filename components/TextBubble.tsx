@@ -74,7 +74,7 @@ function TextBubble({
         ]}
         className="  min-w-4/5 text-sm "
         wrapper="p"
-        speed={60}
+        speed={55}
         cursor={false}
       />
     </motion.div>

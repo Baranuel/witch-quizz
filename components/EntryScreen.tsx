@@ -4,12 +4,7 @@ import Text from "./Text";
 
 import LinkComponent from "./LinkComponent";
 
-interface Props {
-  entered: boolean;
-  setEntered: (entered: boolean) => void;
-}
-
-function EntryScreen({ entered, setEntered }: Props) {
+function EntryScreen() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 100 }}
@@ -25,13 +20,7 @@ function EntryScreen({ entered, setEntered }: Props) {
         vengeful witch, who is deeply resentful. It is advised that you proceed
         with caution.
       </Text>
-      <LinkComponent
-        href="questions"
-        text="Enter"
-        onClick={() => {
-          setEntered(true);
-        }}
-      />
+      <LinkComponent href="questions" text="Enter" />
     </motion.div>
   );
 }
