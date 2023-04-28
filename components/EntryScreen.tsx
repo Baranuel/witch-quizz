@@ -22,8 +22,8 @@ function EntryScreen({ entered, setEntered }: Props) {
       </h1>
       <Text>
         Please be aware that you are entering the domain of a powerful and
-        vengeful witch, who is deeply resentful due to being trapped by a spell.
-        It is advised that you proceed with caution.
+        vengeful witch, who is deeply resentful. It is advised that you proceed
+        with caution.
       </Text>
       <LinkComponent
         href="questions"

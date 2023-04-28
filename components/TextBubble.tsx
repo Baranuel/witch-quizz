@@ -29,7 +29,7 @@ function TextBubble({
   revealClues,
   setRevealClues,
   isLastQuestion,
-  handleStartSpellCast  
+  handleStartSpellCast,
 }: Props) {
   return (
     <motion.div
@@ -64,7 +64,7 @@ function TextBubble({
                 question &&
                   isLastQuestion &&
                   handleStartSpellCast &&
-                  handleStartSpellCast()
+                  handleStartSpellCast();
                 resolve(true);
               }, 250);
             });
@@ -74,7 +74,7 @@ function TextBubble({
         ]}
         className="  min-w-4/5 text-sm "
         wrapper="p"
-        speed={99}
+        speed={60}
         cursor={false}
       />
     </motion.div>
